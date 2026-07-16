@@ -67,6 +67,7 @@
             
             <!-- User Area -->
             <div id="header-user-area" class="flex items-center gap-4 hidden">
+                <div id="demo-indicator" class="hidden bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-md animate-pulse">OFFLINE DEMO</div>
                 <button onclick="bootstrap()" class="bg-indigo-800 hover:bg-indigo-700 transition duration-150 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-1">
                     <i class="fa-solid fa-sync"></i>
                     <span>รีเฟรชข้อมูล</span>
@@ -105,28 +106,39 @@
             </div>
             <div class="p-6 space-y-4">
                 <div class="bg-rose-50 border border-rose-200 rounded-xl p-4 text-sm text-rose-800 space-y-2">
-                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> สาเหตุที่พบบ่อยที่สุด:</p>
-                    <ul class="list-disc pl-5 space-y-1 text-xs">
-                        <li>ยังไม่ได้ทำ <strong>Deploy Web App</strong> หรือลืมอัปเดตเวอร์ชันใหม่ในฝั่ง Google Apps Script</li>
-                        <li>ตั้งค่าสิทธิ์ผู้เข้าใช้งานผิดพลาด (ต้องเลือกสิทธิ์เป็น <strong>"Anyone"</strong> หรือ <strong>"ทุกคน"</strong> เท่านั้น)</li>
-                        <li>ยังไม่ได้กดยอมรับสิทธิ์ความปลอดภัยใน Google Apps Script (Authorize Access)</li>
-                        <li>URL Web App ด้านล่างไม่ตรงกับผลการ Deploy ปัจจุบัน</li>
+                    <p class="font-bold"><i class="fa-solid fa-circle-info mr-1"></i> วิธีแก้ไขที่พบบ่อยและเห็นผลที่สุด:</p>
+                    <ul class="list-disc pl-5 space-y-1.5 text-xs text-rose-950">
+                        <li><strong>ลืมสร้างเวอร์ชันใหม่:</strong> ฝั่ง Apps Script เวลาแก้ไขเสร็จต้องกด <strong>Deploy -> Manage deployments -> ดินสอ -> เลือก 'New Version'</strong> เสมอถึงจะอัปเดต</li>
+                        <li><strong>ตั้งสิทธิ์ผิดพลาด:</strong> ต้องเลือกผู้มีสิทธิ์เข้าถึง (Who has access) เป็น <strong>"Anyone" (ทุกคน)</strong></li>
+                        <li><strong>ลืมกดยอมรับสิทธิ์:</strong> ต้องกดปุ่ม 'เรียกใช้' (Run) ฟังก์ชัน `initSheets` ในหน้า Apps Script ครั้งแรกเพื่อกดยินยอมความปลอดภัย (Authorize Access)</li>
                     </ul>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-xs font-bold text-slate-600">URL เว็บแอป Google Apps Script ปัจจุบัน:</label>
+                    <label class="block text-xs font-bold text-slate-600">URL เว็บแอป Google Apps Script ปัจจุบันของคุณ:</label>
                     <div class="flex gap-2">
-                        <input type="text" id="diag-url-input" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-mono outline-none focus:ring-1 focus:ring-indigo-500" placeholder="https://script.google.com/macros/s/.../exec">
-                        <button onclick="testAndSaveNewUrl()" class="bg-indigo-600 hover:bg-indigo-700 transition text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap">
+                        <input type="text" id="diag-url-input" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-mono outline-none focus:ring-1 focus:ring-indigo-500 text-slate-600" placeholder="https://script.google.com/macros/s/.../exec">
+                        <button onclick="testAndSaveNewUrl()" class="bg-indigo-600 hover:bg-indigo-700 transition text-white px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-sm">
                             ทดสอบเชื่อมต่อใหม่
                         </button>
                     </div>
                 </div>
 
+                <!-- Fallback Button for Demo mode -->
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div class="text-xs text-slate-500">
+                        <p class="font-bold text-slate-700">ต้องการทดลองใช้ระบบออฟไลน์ก่อนหรือไม่?</p>
+                        <p>สามารถเช็คชื่อ เพิ่มนักเรียน และออก PDF ได้ทันทีโดยใช้ฐานข้อมูลจำลองในเครื่อง</p>
+                    </div>
+                    <button onclick="activateDemoMode()" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 transition text-white px-4 py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shadow">
+                        <i class="fa-solid fa-play"></i>
+                        <span>เปิดโหมดทดลองใช้งานออฟไลน์ (Demo Mode)</span>
+                    </button>
+                </div>
+
                 <div class="border-t border-slate-100 pt-4 flex justify-between items-center text-xs text-slate-400">
-                    <span>Spreadsheet ID เป้าหมาย: <code class="bg-slate-100 text-slate-600 px-1 rounded">1QF5WNYoUu6...</code></span>
-                    <button onclick="bootstrap()" class="text-indigo-600 hover:underline font-semibold"><i class="fa-solid fa-arrows-rotate mr-1"></i>ลองใหม่อีกครั้ง</button>
+                    <span>Spreadsheet ID: <code class="bg-slate-100 text-slate-600 px-1 rounded">1QF5WNYoUu6...</code></span>
+                    <button onclick="bootstrap()" class="text-indigo-600 hover:underline font-semibold"><i class="fa-solid fa-arrows-rotate mr-1"></i>โหลดใหม่อีกครั้ง</button>
                 </div>
             </div>
         </section>
@@ -649,7 +661,47 @@
             academicYears: [],
             attendance: [],
             activeTeacherTab: 'checkin',
-            activeAdminTab: 'classrooms'
+            activeAdminTab: 'classrooms',
+            isDemoMode: false // ระบุสถานะออฟไลน์จำลอง (เพื่อใช้ในสภานการณ์ API ขัดข้อง)
+        };
+
+        // ฐานข้อมูลเริ่มต้นจำลองกรณี Offline Demo Mode
+        const OFFLINE_MOCK_DATABASE = {
+            classrooms: [
+                {
+                    id: "demo_class_1",
+                    className: "ม.1/1",
+                    teacherName: "ครูวิภาดา รักดี (โหมดออฟไลน์)",
+                    username: "teacher1",
+                    password: "123",
+                    students: [
+                        { id: "ds1", number: 1, name: "เด็กชายกิตติศักดิ์ เจริญดี" },
+                        { id: "ds2", number: 2, name: "เด็กชายจิรพัฒน์ ณ นคร" },
+                        { id: "ds3", number: 3, name: "เด็กหญิงดวงใจ ห่วงใยเรียน" },
+                        { id: "ds4", number: 4, name: "เด็กหญิงนภสร โสภณวิทยา" }
+                    ]
+                },
+                {
+                    id: "demo_class_2",
+                    className: "ม.2/1",
+                    teacherName: "ครูมานะ มุ่งมั่น (โหมดออฟไลน์)",
+                    username: "teacher2",
+                    password: "123",
+                    students: [
+                        { id: "ds5", number: 1, name: "เด็กชายกมลเทพ สดใส" },
+                        { id: "ds6", number: 2, name: "เด็กหญิงชนัญชิดา ปัญญาไว" }
+                    ]
+                }
+            ],
+            subjects: [
+                { id: "dsub1", name: "ค21101 คณิตศาสตร์พื้นฐาน", hours: 40 },
+                { id: "dsub2", name: "ว21101 วิทยาศาสตร์และเทคโนโลยี", hours: 60 }
+            ],
+            academicYears: [
+                { id: "y2569", year: "2569" },
+                { id: "y2568", year: "2568" }
+            ],
+            attendance: []
         };
 
         // ตัวแปรเก็บประวัติการฟิลเตอร์ตัวกรอง
@@ -658,19 +710,119 @@
         window.selectedDate = new Date().toISOString().split('T')[0];
 
         /**
+         * ฟังก์ชันตรวจสอบสิทธิ์และดึงข้อมูลจำลองสำหรับการจำลอง Offline Demo Mode
+         */
+        function handleDemoModeAction(action, data) {
+            // โหลดฐานข้อมูลจาก LocalStorage ถ้าเคยเซฟไว้
+            let db = JSON.parse(localStorage.getItem('OFFLINE_DB')) || OFFLINE_MOCK_DATABASE;
+            
+            if (action === 'getData') {
+                return db;
+            }
+
+            try {
+                if (action === 'saveAttendance') {
+                    const logId = `${data.classId}_${data.subjectId}_${data.academicYear}_${data.date}`;
+                    db.attendance = db.attendance.filter(a => a.id !== logId);
+                    db.attendance.push({
+                        id: logId,
+                        classId: data.classId,
+                        subjectId: data.subjectId,
+                        academicYear: data.academicYear,
+                        date: data.date,
+                        records: data.records
+                    });
+                } else if (action === 'saveStudent') {
+                    const cls = db.classrooms.find(c => c.id === data.classId);
+                    if (cls) {
+                        const studentId = data.studentId || "student_" + Date.now();
+                        cls.students = cls.students.filter(s => s.id !== studentId);
+                        cls.students.push({
+                            id: studentId,
+                            number: Number(data.number),
+                            name: data.name
+                        });
+                    }
+                } else if (action === 'deleteStudent') {
+                    db.classrooms.forEach(cls => {
+                        cls.students = cls.students.filter(s => s.id !== data.studentId);
+                    });
+                } else if (action === 'saveClassroom') {
+                    const id = data.id || "class_" + Date.now();
+                    let target = db.classrooms.find(c => c.id === id);
+                    if (target) {
+                        target.className = data.className;
+                        target.teacherName = data.teacherName;
+                        target.username = data.username;
+                        target.password = data.password;
+                    } else {
+                        db.classrooms.push({
+                            id,
+                            className: data.className,
+                            teacherName: data.teacherName,
+                            username: data.username,
+                            password: data.password,
+                            students: []
+                        });
+                    }
+                } else if (action === 'deleteClassroom') {
+                    db.classrooms = db.classrooms.filter(c => c.id !== data.id);
+                } else if (action === 'saveSubject') {
+                    const id = data.id || "sub_" + Date.now();
+                    let target = db.subjects.find(s => s.id === id);
+                    if (target) {
+                        target.name = data.name;
+                        target.hours = Number(data.hours);
+                    } else {
+                        db.subjects.push({ id, name: data.name, hours: Number(data.hours) });
+                    }
+                } else if (action === 'deleteSubject') {
+                    db.subjects = db.subjects.filter(s => s.id !== data.id);
+                } else if (action === 'saveYear') {
+                    const id = "y" + data.year;
+                    if (!db.academicYears.some(y => y.year === data.year)) {
+                        db.academicYears.push({ id, year: data.year });
+                    }
+                } else if (action === 'deleteYear') {
+                    db.academicYears = db.academicYears.filter(y => y.id !== data.id);
+                }
+
+                // เซฟบันทึกลงในเครื่องผู้ใช้แบบออฟไลน์
+                localStorage.setItem('OFFLINE_DB', JSON.stringify(db));
+                return { success: true };
+            } catch (err) {
+                console.error("Local DB Save error:", err);
+                return { success: false, message: err.toString() };
+            }
+        }
+
+        /**
          * ฟังก์ชันกลางสำหรับเชื่อมต่อ API (ปลอดภัยและเลี่ยง CORS OPTIONS Preflight)
          */
         async function callApi(action, data = null) {
+            if (window.appState.isDemoMode) {
+                return handleDemoModeAction(action, data);
+            }
+
             document.getElementById('global-loader').classList.remove('hidden');
             const targetUrl = getWebApiUrl();
             try {
                 if (action === 'getData') {
                     const response = await fetch(`${targetUrl}?action=getData`);
-                    if (!response.ok) throw new Error("Network response was not ok");
+                    if (!response.ok) throw new Error("การเชื่อมต่อเน็ตเวิร์กกับเซิร์ฟเวอร์ผิดพลาด");
+                    
+                    // ป้องกันความผิดพลาดกรณี Google ส่งผลลัพธ์หน้า Login HTML กลับมาแทน JSON
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.indexOf("application/json") === -1) {
+                        const rawText = await response.text();
+                        if (rawText.includes("google-signin-") || rawText.includes("login") || rawText.includes("<html")) {
+                            throw new Error("สิทธิ์ความปลอดภัย Apps Script ไม่ถูกต้อง (ต้องสิทธิ์เป็น 'Anyone/ทุกคน')");
+                        }
+                    }
+
                     const result = await response.json();
                     return result;
                 } else {
-                    // ใช้ text/plain ส่ง POST เพื่อเลี่ยง preflight CORS blocking กับเซิร์ฟเวอร์ GAS
                     const response = await fetch(targetUrl, {
                         method: "POST",
                         mode: "cors",
@@ -679,21 +831,40 @@
                         },
                         body: JSON.stringify({ action, data })
                     });
-                    if (!response.ok) throw new Error("Network response was not ok");
+                    if (!response.ok) throw new Error("การส่งข้อมูลบันทึกล้มเหลว");
                     const result = await response.json();
                     if (!result.success) {
-                        throw new Error(result.message || "การประมวลผลฐานข้อมูลล้มเหลว");
+                        throw new Error(result.message || "การประมวลผลเซิร์ฟเวอร์ล้มเหลว");
                     }
                     return result;
                 }
             } catch (error) {
                 console.error("API Error: ", error);
-                showToast("การเชื่อมต่อ API ขัดข้อง: " + error.message, "error");
+                showToast("แจ้งเตือน: " + error.message, "error");
                 throw error;
             } finally {
                 document.getElementById('global-loader').classList.add('hidden');
             }
         }
+
+        /**
+         * ฟังก์ชันเปิดใช้งานโหมดออฟไลน์จำลอง (Demo Mode) เมื่อเชื่อมต่อ API ขัดข้อง
+         */
+        window.activateDemoMode = function() {
+            window.appState.isDemoMode = true;
+            document.getElementById('demo-indicator').classList.remove('hidden');
+            document.getElementById('view-error-diagnostics').classList.add('hidden');
+            
+            // โหลดและดึงข้อมูลออฟไลน์ทันที
+            const offlineDb = handleDemoModeAction('getData');
+            window.appState.classrooms = offlineDb.classrooms;
+            window.appState.subjects = offlineDb.subjects;
+            window.appState.academicYears = offlineDb.academicYears;
+            window.appState.attendance = offlineDb.attendance;
+            
+            showToast("สลับเข้าสู่โหมดทดลองใช้จำลอง (ออฟไลน์) สำเร็จ", "info");
+            processRouting();
+        };
 
         /**
          * เริ่มต้นดึงข้อมูลระบบเข้าทำงานครั้งแรก
@@ -702,6 +873,11 @@
             document.getElementById('view-error-diagnostics').classList.add('hidden');
             document.getElementById('global-loader').classList.remove('hidden');
             document.getElementById('diag-url-input').value = getWebApiUrl();
+
+            if (window.appState.isDemoMode) {
+                activateDemoMode();
+                return;
+            }
 
             try {
                 const data = await callApi('getData');
@@ -717,7 +893,6 @@
                 console.error("Bootstrap Connection Failed:", err);
                 document.getElementById('global-loader').classList.add('hidden');
                 showView('view-error-diagnostics'); // แสดงกล่องวินิจฉัยปัญหาหากเชื่อมต่อล้มเหลว
-                showToast("ไม่สามารถเรียกดูฐานข้อมูล Google Sheets ได้ กรุณาเช็คการตั้งค่า Apps Script", "error");
             }
         }
 
@@ -727,7 +902,7 @@
         async function testAndSaveNewUrl() {
             const inputUrl = document.getElementById('diag-url-input').value.trim();
             if (!inputUrl.startsWith("https://script.google.com/")) {
-                showToast("รูปแบบ URL สคริปต์ไม่ถูกต้อง", "error");
+                showToast("รูปแบบ URL สคริปต์สิทธิ์เข้าถึงไม่ถูกต้อง", "error");
                 return;
             }
 
@@ -738,7 +913,9 @@
                 
                 if (testData && (testData.classrooms || testData.subjects)) {
                     localStorage.setItem('CUSTOM_WEB_APP_URL', inputUrl);
-                    showToast("เชื่อมต่อข้อมูลสำเร็จและอัปเดตระบบแล้ว!", "success");
+                    window.appState.isDemoMode = false;
+                    document.getElementById('demo-indicator').classList.add('hidden');
+                    showToast("เชื่อมต่อข้อมูล Google Sheet สำเร็จ!", "success");
                     bootstrap();
                 } else {
                     throw new Error("โครงสร้างข้อมูลตอบกลับจาก Web App ไม่ถูกต้อง");
@@ -998,7 +1175,7 @@
                     date: window.selectedDate,
                     records: records
                 });
-                showToast("บันทึกการเช็คเข้าเรียนลง Google Sheet สำเร็จ!", "success");
+                showToast("บันทึกการเช็คเข้าเรียนสำเร็จ!", "success");
                 // รีเฟรชฐานข้อมูล
                 const updated = await callApi('getData');
                 window.appState.attendance = updated.attendance || [];
